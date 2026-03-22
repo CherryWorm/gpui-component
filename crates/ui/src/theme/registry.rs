@@ -1,5 +1,4 @@
-use crate::{Theme, ThemeColor, ThemeConfig, ThemeMode, ThemeSet, highlighter::HighlightTheme};
-#[allow(unused)]
+use crate::{ThemeColor, ThemeConfig, ThemeMode, ThemeSet, highlighter::HighlightTheme};
 use anyhow::Result;
 use gpui::{App, Global, SharedString};
 use std::{
@@ -41,35 +40,6 @@ pub(crate) static DEFAULT_THEME_COLORS: LazyLock<
 pub(super) fn init(cx: &mut App) {
     cx.set_global(ThemeRegistry::default());
     ThemeRegistry::global_mut(cx).init_default_themes();
-
-    // Observe changes to the theme registry to apply changes to the active theme
-    cx.observe_global::<ThemeRegistry>(|cx| {
-        let mode = Theme::global(cx).mode;
-        let light_theme = Theme::global(cx).light_theme.name.clone();
-        let dark_theme = Theme::global(cx).dark_theme.name.clone();
-
-        if let Some(theme) = ThemeRegistry::global(cx)
-            .themes()
-            .get(&light_theme)
-            .cloned()
-        {
-            Theme::global_mut(cx).light_theme = theme;
-        }
-        if let Some(theme) = ThemeRegistry::global(cx).themes().get(&dark_theme).cloned() {
-            Theme::global_mut(cx).dark_theme = theme;
-        }
-
-        let theme_name = if mode.is_dark() {
-            dark_theme
-        } else {
-            light_theme
-        };
-
-        tracing::info!("Reload active theme: {:?}...", theme_name);
-        Theme::change(mode, None, cx);
-        cx.refresh_windows();
-    })
-    .detach();
 }
 
 #[derive(Default, Debug)]
