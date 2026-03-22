@@ -339,6 +339,11 @@ impl TabPanel {
         cx.emit(PanelEvent::LayoutChanged);
     }
 
+    /// The number of panels in the tab panel
+    pub fn panel_count(&self) -> usize {
+        self.panels.len()
+    }
+
     fn detach_panel(
         &mut self,
         panel: Arc<dyn PanelView>,

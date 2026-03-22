@@ -319,6 +319,7 @@ struct SelectOptions {
     menu_width: Length,
     disabled: bool,
     appearance: bool,
+    max_height: Length,
 }
 
 impl Default for SelectOptions {
@@ -335,6 +336,7 @@ impl Default for SelectOptions {
             disabled: false,
             appearance: true,
             search_placeholder: None,
+            max_height: rems(20.0).into(),
         }
     }
 }
@@ -649,7 +651,7 @@ where
         self.focus_handle.focus(window, cx);
     }
 
-    fn update_selected_value(&mut self, _: &Window, cx: &App) {
+    pub fn update_selected_value(&mut self, _: &Window, cx: &App) {
         self.selected_value = self
             .selected_index(cx)
             .and_then(|ix| self.list.read(cx).delegate().delegate.item(ix))
@@ -902,7 +904,7 @@ where
                                                     },
                                                 )
                                                 .with_size(self.options.size)
-                                                .max_h(rems(20.))
+                                                .max_h(self.options.max_height)
                                                 .paddings(Edges::all(px(4.))),
                                         ),
                                 )
@@ -932,6 +934,12 @@ where
     /// Set the width of the dropdown menu, default: Length::Auto
     pub fn menu_width(mut self, width: impl Into<Length>) -> Self {
         self.options.menu_width = width.into();
+        self
+    }
+
+    /// Set the maximum height of the dropdown menu, default: rems(20.0)
+    pub fn max_height(mut self, max_height: impl Into<Length>) -> Self {
+        self.options.max_height = max_height.into();
         self
     }
 

@@ -61,6 +61,7 @@ impl ResizableState {
         ix: Option<usize>,
         cx: &mut Context<Self>,
     ) {
+        println!("insert_panel: size: {:?}, ix: {:?}", size, ix);
         let panel_state = ResizablePanelState {
             size,
             ..Default::default()
@@ -93,17 +94,25 @@ impl ResizableState {
     pub(crate) fn sync_panels_count(
         &mut self,
         axis: Axis,
-        panels_count: usize,
+        panels: &[ResizablePanel],
         cx: &mut Context<Self>,
     ) {
         let mut changed = self.axis != axis;
         self.axis = axis;
 
+        let panels_count = panels.len();
+
         if panels_count > self.panels.len() {
-            let diff = panels_count - self.panels.len();
-            self.panels
-                .extend(vec![ResizablePanelState::default(); diff]);
-            self.sizes.extend(vec![PANEL_MIN_SIZE; diff]);
+            for i in self.panels.len()..panels_count {
+                let panel = &panels[i];
+                let size = panel.initial_size;
+                self.panels.push(ResizablePanelState {
+                    size: size.clone(),
+                    size_range: panel.size_range.clone(),
+                    bounds: Bounds::default(),
+                });
+                self.sizes.push(size.unwrap_or(PANEL_MIN_SIZE));
+            }
             changed = true;
         }
 

@@ -134,9 +134,8 @@ impl RenderOnce for ResizablePanelGroup {
         };
 
         // Sync panels to the state
-        let panels_count = self.children.len();
         state.update(cx, |state, cx| {
-            state.sync_panels_count(self.axis, panels_count, cx);
+            state.sync_panels_count(self.axis, &self.children, cx);
         });
 
         container
@@ -183,9 +182,9 @@ pub struct ResizablePanel {
     panel_ix: usize,
     state: Option<Entity<ResizableState>>,
     /// Initial size is the size that the panel has when it is created.
-    initial_size: Option<Pixels>,
+    pub(crate) initial_size: Option<Pixels>,
     /// size range limit of this panel.
-    size_range: Range<Pixels>,
+    pub(crate) size_range: Range<Pixels>,
     children: Vec<AnyElement>,
     visible: bool,
 }
