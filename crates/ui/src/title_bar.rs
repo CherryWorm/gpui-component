@@ -1,8 +1,6 @@
 use std::rc::Rc;
 
-use crate::{
-    ActiveTheme, Icon, IconName, InteractiveElementExt as _, Sizable as _, StyledExt, h_flex,
-};
+use crate::{ActiveTheme, Icon, IconName, InteractiveElementExt as _, StyledExt, h_flex};
 use gpui::{
     AnyElement, App, ClickEvent, Context, Decorations, Hsla, InteractiveElement, IntoElement,
     MouseButton, ParentElement, Pixels, Render, RenderOnce, StatefulInteractiveElement as _,
@@ -15,7 +13,7 @@ pub const TITLE_BAR_HEIGHT: Pixels = px(34.);
 #[cfg(target_os = "macos")]
 const TITLE_BAR_LEFT_PADDING: Pixels = px(80.);
 #[cfg(not(target_os = "macos"))]
-const TITLE_BAR_LEFT_PADDING: Pixels = px(12.);
+const TITLE_BAR_LEFT_PADDING: Pixels = px(0.);
 
 /// TitleBar used to customize the appearance of the title bar.
 ///
@@ -164,7 +162,7 @@ impl RenderOnce for ControlIcon {
         div()
             .id(self.id())
             .flex()
-            .w(TITLE_BAR_HEIGHT)
+            .w(px(45.0))
             .h_full()
             .flex_shrink_0()
             .justify_center()
@@ -196,7 +194,7 @@ impl RenderOnce for ControlIcon {
                     }
                 })
             })
-            .child(Icon::new(self.icon()).small())
+            .child(Icon::new(self.icon()).text_size(px(20.0)))
     }
 }
 

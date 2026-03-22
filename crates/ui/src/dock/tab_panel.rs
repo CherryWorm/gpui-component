@@ -502,16 +502,16 @@ impl TabPanel {
                         move |menu, window, cx| {
                             view.update(cx, |this, cx| {
                                 this.dropdown_menu(menu, window, cx)
-                                    .separator()
-                                    .menu_with_disabled(
-                                        if zoomed {
-                                            t!("Dock.Zoom Out")
-                                        } else {
-                                            t!("Dock.Zoom In")
-                                        },
-                                        Box::new(ToggleZoom),
-                                        !zoomable,
-                                    )
+                                    .when(zoomable, |this| {
+                                        this.separator().menu(
+                                            if zoomed {
+                                                t!("Dock.Zoom Out")
+                                            } else {
+                                                t!("Dock.Zoom In")
+                                            },
+                                            Box::new(ToggleZoom),
+                                        )
+                                    })
                                     .when(closable, |this| {
                                         this.separator()
                                             .menu(t!("Dock.Close"), Box::new(ClosePanel))
