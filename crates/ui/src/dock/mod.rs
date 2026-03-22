@@ -1082,6 +1082,10 @@ impl DockArea {
         cx.notify();
     }
 
+    pub fn is_zoomed_in(&self) -> bool {
+        self.zoom_view.is_some()
+    }
+
     fn render_items(&self, _window: &mut Window, _cx: &mut Context<Self>) -> AnyElement {
         match &self.center {
             DockItem::Split { view, .. } => view.clone().into_any_element(),

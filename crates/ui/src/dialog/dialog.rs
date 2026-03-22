@@ -1,10 +1,10 @@
 use std::{rc::Rc, sync::LazyLock, time::Duration};
 
 use gpui::{
-    Animation, AnimationExt as _, AnyElement, App, Bounds, BoxShadow, ClickEvent, Edges,
-    FocusHandle, Hsla, InteractiveElement, IntoElement, KeyBinding, MouseButton, ParentElement,
-    Pixels, Point, RenderOnce, SharedString, StyleRefinement, Styled, Window, WindowControlArea,
-    actions, anchored, div, hsla, point, prelude::FluentBuilder, px,
+    AbsoluteLength, Animation, AnimationExt as _, AnyElement, App, Bounds, BoxShadow, ClickEvent,
+    Edges, FocusHandle, Hsla, InteractiveElement, IntoElement, KeyBinding, MouseButton,
+    ParentElement, Pixels, Point, RenderOnce, SharedString, StyleRefinement, Styled, Window,
+    WindowControlArea, actions, anchored, div, hsla, point, prelude::FluentBuilder, px, relative,
 };
 use rust_i18n::t;
 
@@ -170,7 +170,7 @@ type ContentBuilderFn = Rc<dyn Fn(DialogContent, &mut Window, &mut App) -> Dialo
 
 #[derive(Clone)]
 pub(crate) struct DialogProps {
-    width: Pixels,
+    width: AbsoluteLength,
     max_width: Option<Pixels>,
     margin_top: Option<Pixels>,
     close_button: bool,
@@ -185,7 +185,7 @@ impl Default for DialogProps {
     fn default() -> Self {
         Self {
             margin_top: None,
-            width: px(448.),
+            width: px(448.).into(),
             max_width: None,
             overlay: true,
             keyboard: true,
@@ -334,13 +334,13 @@ impl Dialog {
     /// Sets the width of the dialog, defaults to 448px.
     ///
     /// See also [`Self::width`]
-    pub fn w(mut self, width: impl Into<Pixels>) -> Self {
+    pub fn w(mut self, width: impl Into<AbsoluteLength>) -> Self {
         self.props.width = width.into();
         self
     }
 
     /// Sets the width of the dialog, defaults to 448px.
-    pub fn width(mut self, width: impl Into<Pixels>) -> Self {
+    pub fn width(mut self, width: impl Into<AbsoluteLength>) -> Self {
         self.props.width = width.into();
         self
     }
@@ -458,7 +458,7 @@ impl RenderOnce for Dialog {
         };
         let offset_top = px(layer_ix as f32 * 16.);
         let y = self.props.margin_top.unwrap_or(view_size.height / 10.) + offset_top;
-        let x = bounds.center().x - self.props.width / 2.;
+        let x = bounds.center().x - self.props.width.to_pixels(window.rem_size()) / 2.;
 
         let base_size = window.text_style().font_size;
         let rem_size = window.rem_size();
@@ -522,6 +522,7 @@ impl RenderOnce for Dialog {
                     .child(
                         v_flex()
                             .id(layer_ix)
+                            .occlude()
                             .track_focus(&self.focus_handle)
                             .focus_trap(format!("dialog-{}", layer_ix), &self.focus_handle)
                             .bg(cx.theme().background)

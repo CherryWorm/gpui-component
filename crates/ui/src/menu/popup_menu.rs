@@ -1295,6 +1295,7 @@ impl Render for PopupMenu {
             .on_action(cx.listener(Self::dismiss))
             .on_mouse_down_out(cx.listener(Self::on_mouse_down_out))
             .popover_style(cx)
+            .block_mouse_except_scroll()
             .text_color(cx.theme().popover_foreground)
             .relative()
             .occlude()
