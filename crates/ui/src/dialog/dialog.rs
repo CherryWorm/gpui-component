@@ -4,7 +4,7 @@ use gpui::{
     AbsoluteLength, Animation, AnimationExt as _, AnyElement, App, Bounds, BoxShadow, ClickEvent,
     Edges, FocusHandle, Hsla, InteractiveElement, IntoElement, KeyBinding, MouseButton,
     ParentElement, Pixels, Point, RenderOnce, SharedString, StyleRefinement, Styled, Window,
-    WindowControlArea, actions, anchored, div, hsla, point, prelude::FluentBuilder, px, relative,
+    WindowControlArea, actions, anchored, div, hsla, point, prelude::FluentBuilder, px,
 };
 use rust_i18n::t;
 

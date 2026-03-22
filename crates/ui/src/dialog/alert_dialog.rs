@@ -202,7 +202,7 @@ impl AlertDialog {
 
     /// Sets the width of the alert dialog, defaults to 420px.
     pub fn width(mut self, width: impl Into<Pixels>) -> Self {
-        self.base = self.base.width(width);
+        self.base = self.base.width(width.into());
         self
     }
 
